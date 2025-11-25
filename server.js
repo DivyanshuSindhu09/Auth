@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import { connectDB } from "./config/database.js"
+import authRouter from "./routes/auth.route.js"
 
 dotenv.config()
 
@@ -27,3 +28,7 @@ app.get('/', (req, res) => {
         Message : "TMKY"
     })
 })
+
+//routes
+
+app.use('/api/v1/auth', authRouter)
