@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
+import { sendMail } from "../config/nodemailer.js"
 
 export const signUp = async (req, res) => {
     const { name, email, password } = req.body
@@ -39,6 +40,14 @@ export const signUp = async (req, res) => {
             sameSite : process.env.NODE_ENV === 'development' ? "strict" : "none",
             maxAge : 7*24*60*60*1000
         })
+
+        //send mail
+
+        await sendMail(
+            user.email,
+            `Welcome ${name}! Your account has been created successfully.`,
+            "Welcome to Our App"
+        );
 
         return res.status(200).json({
             user,
