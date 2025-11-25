@@ -1,4 +1,4 @@
-import { User } from "../models/user.model"
+import { User } from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
@@ -41,6 +41,7 @@ export const signUp = async (req, res) => {
         })
 
         return res.status(200).json({
+            user,
             success : true,
             message : "User signedup successfully"
         })
@@ -100,6 +101,7 @@ export const login = async (req, res) => {
         })
 
         return res.status(200).json({
+            user,
             success : true,
             message : "User login successfull"
         })
