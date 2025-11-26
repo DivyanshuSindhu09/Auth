@@ -145,6 +145,7 @@ export const logout = async (req, res) => {
 
 export const sendverificationOTP = async (req, res) => {
     try {
+        //we'll get it from token
         const {userId} = req.body
 
         const user = await User.findById(userId)
@@ -171,6 +172,59 @@ export const sendverificationOTP = async (req, res) => {
         
     } catch (error) {
          return res.json({
+            success : false,
+            message : error.message
+        })
+    }
+}
+
+export const verifyOTP = async (req, res) => {
+
+    const {userId, otp} = req.body
+
+    if (!userId || !otp) {
+        res.status(400).json({
+            success : false,
+            message : "Details are missing!"
+        })
+    }
+    try {
+        const user = await User.findById(userId)
+
+        if(!user){
+            return res.status(401).json({
+                success : false,
+                message : "User not found!"
+            })
+        }
+
+        if (user.verifyOtp === '' || user.verifyOtp !== otp) {
+            return res.status(400).json({
+                success : false,
+                message : "Invalid Otp"
+            })
+        }
+
+        if (Date.now() > user.verifyOtpExpiresAt) {
+            return res.status(400).json({
+                success : false,
+                message : "OTP has expired!"
+            })
+        }
+
+        user.isVerified = true
+        user.verifyOtp = ""
+        user.verifyOtpExpiresAt = 0       
+           
+        await user.save()
+
+        return res.status(200).json({
+            success : true,
+            message : "User verified successfully!"
+        })
+        
+    } catch (error) {
+        return res.json({
             success : false,
             message : error.message
         })
