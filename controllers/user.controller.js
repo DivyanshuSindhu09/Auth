@@ -146,7 +146,7 @@ export const logout = async (req, res) => {
 export const sendverificationOTP = async (req, res) => {
     try {
         //we'll get it from token
-        const {userId} = req.body
+        const userId = req.user.id
 
         const user = await User.findById(userId)
 
@@ -180,7 +180,9 @@ export const sendverificationOTP = async (req, res) => {
 
 export const verifyOTP = async (req, res) => {
 
-    const {userId, otp} = req.body
+    const userId = req.user.id
+
+    const {otp} = req.body
 
     if (!userId || !otp) {
         res.status(400).json({
