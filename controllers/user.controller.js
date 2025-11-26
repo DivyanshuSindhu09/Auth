@@ -157,7 +157,7 @@ export const sendverificationOTP = async (req, res) => {
             })
         }
 
-        const otp = String(Math.floor(100000 +  Math.random * 900000))
+        const otp = String(Math.floor(100000 +  Math.random() * 900000))
 
         user.verifyOtp = otp
         user.verifyOtpExpiresAt = Date.now() + 24*60*60*1000
@@ -170,6 +170,10 @@ export const sendverificationOTP = async (req, res) => {
             "Account Verification Otp"
         );
         
+        return res.status(200).json({
+            success : true,
+            message : "OTP SENT SUCCESSFULLY!"
+        })
     } catch (error) {
          return res.json({
             success : false,
